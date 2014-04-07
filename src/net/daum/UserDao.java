@@ -16,7 +16,7 @@ public class UserDao {
 		
 		// Connection 을 맺고
 		Class.forName("com.mysql.jdbc.Driver");
-		Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/jeju","jeju","jejupw");
+		Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/jeju?useUnicode=true&characterEncoding=utf8","jeju","jejupw");
 
 		// 쿼리를 만들어서
 		PreparedStatement preparedStatement = connection.prepareStatement("select * from userinfo where id = ?");
@@ -40,16 +40,24 @@ public class UserDao {
 		return user;
 	}
 
-}
-/*
-grant all privileges on *.* to 'jeju'@'localhost'
-   identified by 'jejupw' with grant option;
+	public static void add(User user) throws SQLException, ClassNotFoundException {
+		// Connection 을 맺고
+		Class.forName("com.mysql.jdbc.Driver");
+		Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/jeju?useUnicode=true&characterEncoding=utf8","jeju","jejupw");
 
-create database jeju;
-use jeju
-create table userinfo(
-     id int(10) not null primary key,
-     name varchar(50),
-     password varchar(50),
-     INDEX(id));
-*/
+		// 쿼리를 만들어서
+		PreparedStatement preparedStatement = connection.prepareStatement("insert into userinfo(id,name,password) values(?,?,?)");
+		preparedStatement.setString(1, user.getId());
+		preparedStatement.setString(2, user.getName());
+		preparedStatement.setString(3, user.getPassword());
+		
+		// 실행시키고
+		preparedStatement.executeUpdate();
+		
+		// 자원을 해지한다.
+		preparedStatement.close();
+		connection.close();
+		
+	}
+	
+}
