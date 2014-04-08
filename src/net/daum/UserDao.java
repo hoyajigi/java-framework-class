@@ -7,6 +7,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class UserDao {
+	ConnectionMaker connectionMaker;
+	
+	public UserDao() {
+		this.connectionMaker=new DConnectionMaker();
+	}
 
 	public User get(String id) throws ClassNotFoundException, SQLException {
 		// 사용자는 어디에 저장 되어 있는거지?
@@ -15,7 +20,7 @@ public class UserDao {
 		// Mysql을 사용해보자..
 		
 		// Connection 을 맺고
-		Connection connection = getConnection();
+		Connection connection =connectionMaker.getConnection();
 
 		// 쿼리를 만들어서
 		PreparedStatement preparedStatement = connection.prepareStatement("select * from userinfo where id = ?");
@@ -42,7 +47,7 @@ public class UserDao {
 	
 
 	public void add(User user) throws SQLException, ClassNotFoundException {
-		Connection connection = getConnection();
+		Connection connection =connectionMaker.getConnection();
 
 		// 쿼리를 만들어서
 		PreparedStatement preparedStatement = connection.prepareStatement("insert into userinfo(id,name,password) values(?,?,?)");
@@ -58,9 +63,5 @@ public class UserDao {
 		connection.close();
 		
 	}
-	private Connection getConnection() throws ClassNotFoundException,SQLException {
-		Class.forName("com.mysql.jdbc.Driver");
-		Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/jeju?useUnicode=true&characterEncoding=utf8","jeju","jejupw");
-		return connection;
-	}	
+
 }
