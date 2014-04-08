@@ -26,7 +26,7 @@ public class UserDaoTest {
 		user.setName("아기호야");
 		user.setPassword("1234");
 		UserDao userDao=new UserDao();
-		UserDao.add(user);
+		userDao.add(user);
 		User addedUser=userDao.get(id);
 		assertEquals(id, addedUser.getId());
 		assertEquals("아기호야", addedUser.getName());

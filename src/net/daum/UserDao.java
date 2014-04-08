@@ -15,8 +15,7 @@ public class UserDao {
 		// Mysql을 사용해보자..
 		
 		// Connection 을 맺고
-		Class.forName("com.mysql.jdbc.Driver");
-		Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/jeju?useUnicode=true&characterEncoding=utf8","jeju","jejupw");
+		Connection connection = getConnection();
 
 		// 쿼리를 만들어서
 		PreparedStatement preparedStatement = connection.prepareStatement("select * from userinfo where id = ?");
@@ -40,10 +39,10 @@ public class UserDao {
 		return user;
 	}
 
-	public static void add(User user) throws SQLException, ClassNotFoundException {
-		// Connection 을 맺고
-		Class.forName("com.mysql.jdbc.Driver");
-		Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/jeju?useUnicode=true&characterEncoding=utf8","jeju","jejupw");
+	
+
+	public void add(User user) throws SQLException, ClassNotFoundException {
+		Connection connection = getConnection();
 
 		// 쿼리를 만들어서
 		PreparedStatement preparedStatement = connection.prepareStatement("insert into userinfo(id,name,password) values(?,?,?)");
@@ -59,5 +58,9 @@ public class UserDao {
 		connection.close();
 		
 	}
-	
+	private Connection getConnection() throws ClassNotFoundException,SQLException {
+		Class.forName("com.mysql.jdbc.Driver");
+		Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/jeju?useUnicode=true&characterEncoding=utf8","jeju","jejupw");
+		return connection;
+	}	
 }
