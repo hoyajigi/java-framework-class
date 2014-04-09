@@ -5,12 +5,22 @@ import static org.junit.Assert.assertEquals;
 import java.sql.SQLException;
 import java.util.Random;
 
+import org.junit.Before;
 import org.junit.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class UserDaoTest {
+	private UserDao userDao;
+
+	@Before
+	public void setup() {
+//		userDao = new DaoFactory().getUserDao();
+		ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
+		userDao=context.getBean("userDao",UserDao.class);
+	}
 	@Test
 	public void get() throws ClassNotFoundException, SQLException {
-		UserDao userDao = new DaoFactory().getUserDao();
 		String id = "1";
 		User user = userDao.get(id);
 		assertEquals("1", user.getId());
@@ -25,7 +35,6 @@ public class UserDaoTest {
 		user.setId(id);
 		user.setName("아기호야");
 		user.setPassword("1234");
-		UserDao userDao=new DaoFactory().getUserDao();
 		userDao.add(user);
 		User addedUser=userDao.get(id);
 		assertEquals(id, addedUser.getId());

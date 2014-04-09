@@ -1,12 +1,17 @@
 package net.daum;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
 public class DaoFactory {
 
-	public UserDao getUserDao() {
-		return new UserDao(getConnctionMaker());
+	@Bean
+	public UserDao userDao() {
+		return new UserDao(connctionMaker());
 	}
-
-	private ConnectionMaker getConnctionMaker() {
+	@Bean
+	public ConnectionMaker connctionMaker() {
 		return new DConnectionMaker();
 	}
 
