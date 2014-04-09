@@ -8,7 +8,7 @@ import java.util.Random;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.GenericXmlApplicationContext;
 
 public class UserDaoTest {
 	private UserDao userDao;
@@ -16,7 +16,7 @@ public class UserDaoTest {
 	@Before
 	public void setup() {
 //		userDao = new DaoFactory().getUserDao();
-		ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
+		ApplicationContext context = new GenericXmlApplicationContext("daoFactory.xml");
 		userDao=context.getBean("userDao",UserDao.class);
 	}
 	@Test

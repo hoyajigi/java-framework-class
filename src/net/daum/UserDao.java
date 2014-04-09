@@ -8,10 +8,9 @@ import java.sql.SQLException;
 public class UserDao {
 	ConnectionMaker connectionMaker;
 	
-	public UserDao(ConnectionMaker connectionMaker) {
+	public void setConnectionMaker(ConnectionMaker connectionMaker){
 		this.connectionMaker=connectionMaker;
 	}
-
 	public User get(String id) throws ClassNotFoundException, SQLException {
 		// 사용자는 어디에 저장 되어 있는거지?
 		// Database를 사용해 보자
