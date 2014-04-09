@@ -5,12 +5,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.sql.DataSource;
+
+
 public class UserDao {
-	ConnectionMaker connectionMaker;
+	private DataSource dataSource;
 	
-	public void setConnectionMaker(ConnectionMaker connectionMaker){
-		this.connectionMaker=connectionMaker;
-	}
 	public User get(String id) throws ClassNotFoundException, SQLException {
 		// 사용자는 어디에 저장 되어 있는거지?
 		// Database를 사용해 보자
@@ -18,7 +18,7 @@ public class UserDao {
 		// Mysql을 사용해보자..
 		
 		// Connection 을 맺고
-		Connection connection =connectionMaker.getConnection();
+		Connection connection =dataSource.getConnection();
 
 		// 쿼리를 만들어서
 		PreparedStatement preparedStatement = connection.prepareStatement("select * from userinfo where id = ?");
@@ -45,7 +45,7 @@ public class UserDao {
 	
 
 	public void add(User user) throws SQLException, ClassNotFoundException {
-		Connection connection =connectionMaker.getConnection();
+		Connection connection =dataSource.getConnection();
 
 		// 쿼리를 만들어서
 		PreparedStatement preparedStatement = connection.prepareStatement("insert into userinfo(id,name,password) values(?,?,?)");
@@ -60,6 +60,14 @@ public class UserDao {
 		preparedStatement.close();
 		connection.close();
 		
+	}
+
+
+
+
+
+	public void setDataSource(DataSource dataSource) {
+		this.dataSource = dataSource;
 	}
 
 }
