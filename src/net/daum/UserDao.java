@@ -12,46 +12,46 @@ public class UserDao {
 	}
 
 	public User get(final String id) throws ClassNotFoundException, SQLException {
+		final String query = "select * from userinfo where id = ?";
+		final String[] params = new String[] {id};
 		return jdbcContext.jdbcContextWithStatementStrategyForQuery(new StatementStrategy() {
 			
 			@Override
 			public PreparedStatement makeStatement(Connection connection)
 					throws SQLException {
-				PreparedStatement preparedStatement = connection.prepareStatement("select * from userinfo where id = ?");
-				preparedStatement.setString(1, id);
+				PreparedStatement preparedStatement = connection.prepareStatement(query);
+				for (int i = 0; i < params.length; i++) {
+					preparedStatement.setString(i+1, params[i]);
+				}
+				return preparedStatement;
+			}
+		});
+	}
+
+	private void update(final String query, final String[] params) throws SQLException {
+		jdbcContext.jdbcContextWithStatementStrategyForUpdate(new StatementStrategy() {
+			
+			@Override
+			public PreparedStatement makeStatement(Connection connection)
+					throws SQLException {
+				PreparedStatement preparedStatement = connection.prepareStatement(query);
+				for (int i = 0; i < params.length; i++) {
+					preparedStatement.setString(i+1, params[i]);
+				}
 				return preparedStatement;
 			}
 		});
 	}
 
 	public void add(final User user) throws SQLException, ClassNotFoundException {
-		jdbcContext.jdbcContextWithStatementStrategyForUpdate(new StatementStrategy() {
-			
-			@Override
-			public PreparedStatement makeStatement(Connection connection)
-					throws SQLException {
-				PreparedStatement preparedStatement = connection
-						.prepareStatement("insert into userinfo(id,name,password) values(?,?,?)");
-				preparedStatement.setString(1, user.getId());
-				preparedStatement.setString(2, user.getName());
-				preparedStatement.setString(3, user.getPassword());
-				return preparedStatement;
-			}
-		});
+		String query = "insert into userinfo(id,name,password) values(?,?,?)";
+		String[] params = new String[] {user.getId(),user.getName(),user.getPassword()};
+		update(query, params);
 	}
 
-	public void delete(final String id) {
-		jdbcContext.jdbcContextWithStatementStrategyForUpdate(new StatementStrategy() {
-			
-			@Override
-			public PreparedStatement makeStatement(Connection connection)
-					throws SQLException {
-				PreparedStatement preparedStatement;
-				preparedStatement = connection
-						.prepareStatement("delete from userinfo where id = ?");
-				preparedStatement.setString(1, id);
-				return preparedStatement;
-			}
-		});
+	public void delete(final String id) throws SQLException {
+		String query = "delete from userinfo where id = ?";
+		String[] params = new String[] {id};
+		update(query, params);
 	}
 }
