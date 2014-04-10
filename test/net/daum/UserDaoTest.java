@@ -1,6 +1,6 @@
 package net.daum;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.sql.SQLException;
 import java.util.Random;
@@ -40,6 +40,17 @@ public class UserDaoTest {
 		assertEquals(id, addedUser.getId());
 		assertEquals("아기호야", addedUser.getName());
 		assertEquals("1234", addedUser.getPassword());		
+	}
+	@Test
+	public void delete() throws SQLException, ClassNotFoundException {
+		User user=new User();
+		String id = String.valueOf(new Random().nextInt());
+		user.setId(id);
+		user.setName("아기호야");
+		user.setPassword("1234");
+		userDao.add(user);	
+		userDao.delete(id);
+		assertNull(userDao.get(id));
 	}
 }
 /*
