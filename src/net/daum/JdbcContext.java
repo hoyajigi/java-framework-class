@@ -98,4 +98,18 @@ public class JdbcContext {
 			}
 		}
 	}
+	public void update(final String query, final String[] params) throws SQLException {
+		jdbcContextWithStatementStrategyForUpdate(new StatementStrategy() {
+			
+			@Override
+			public PreparedStatement makeStatement(Connection connection)
+					throws SQLException {
+				PreparedStatement preparedStatement = connection.prepareStatement(query);
+				for (int i = 0; i < params.length; i++) {
+					preparedStatement.setString(i+1, params[i]);
+				}
+				return preparedStatement;
+			}
+		});
+	}
 }
