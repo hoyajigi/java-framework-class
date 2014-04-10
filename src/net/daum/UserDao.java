@@ -12,54 +12,94 @@ public class UserDao {
 	private DataSource dataSource;
 	
 	public User get(String id) throws ClassNotFoundException, SQLException {
-		// 사용자는 어디에 저장 되어 있는거지?
-		// Database를 사용해 보자
-		// 어떤 Database를 사용하지?
-		// Mysql을 사용해보자..
-		
-		// Connection 을 맺고
-		Connection connection =dataSource.getConnection();
+		Connection connection=null;
+		PreparedStatement preparedStatement=null;
+		ResultSet resultSet=null;
+		User user=null;
+		try {
+			connection = dataSource.getConnection();
 
-		// 쿼리를 만들어서
-		PreparedStatement preparedStatement = connection.prepareStatement("select * from userinfo where id = ?");
-		preparedStatement.setString(1, id);
-		
-		// 실행시키고
-		ResultSet resultSet = preparedStatement.executeQuery();
-		resultSet.next();
-		
-		// 결과를 User에 잘 매핑하고
-		User user=new User();
-		user.setId(resultSet.getString("id"));
-		user.setName(resultSet.getString("name"));
-		user.setPassword(resultSet.getString("password"));
-		
-		// 자원을 해지한다.
-		resultSet.close();
-		preparedStatement.close();
-		connection.close();
-		
+			preparedStatement = connection.prepareStatement("select * from userinfo where id = ?");
+			preparedStatement.setString(1, id);
+			
+			resultSet = preparedStatement.executeQuery();
+			resultSet.next();
+			
+			user = new User();
+			user.setId(resultSet.getString("id"));
+			user.setName(resultSet.getString("name"));
+			user.setPassword(resultSet.getString("password"));
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		} finally{
+			// 자원을 해지한다.
+			if (resultSet!=null) {
+				try {
+					resultSet.close();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}				
+			}
+			if (preparedStatement!=null) {
+				try {
+					preparedStatement.close();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}	
+			}
+			if (connection!=null) {
+				try {
+					connection.close();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}				
+			}
+		}
 		return user;
 	}
 
 	
 
 	public void add(User user) throws SQLException, ClassNotFoundException {
-		Connection connection =dataSource.getConnection();
-
+		Connection connection=null;
 		// 쿼리를 만들어서
-		PreparedStatement preparedStatement = connection.prepareStatement("insert into userinfo(id,name,password) values(?,?,?)");
-		preparedStatement.setString(1, user.getId());
-		preparedStatement.setString(2, user.getName());
-		preparedStatement.setString(3, user.getPassword());
-		
-		// 실행시키고
-		preparedStatement.executeUpdate();
-		
-		// 자원을 해지한다.
-		preparedStatement.close();
-		connection.close();
-		
+		PreparedStatement preparedStatement=null;
+		try {
+			connection = dataSource.getConnection();
+
+			preparedStatement = connection.prepareStatement("insert into userinfo(id,name,password) values(?,?,?)");
+			preparedStatement.setString(1, user.getId());
+			preparedStatement.setString(2, user.getName());
+			preparedStatement.setString(3, user.getPassword());
+			
+			// 실행시키고
+			preparedStatement.executeUpdate();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally{
+			// 자원을 해지한다.
+			if (preparedStatement!=null) {
+				try {
+					preparedStatement.close();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}	
+			}
+			if (connection!=null) {
+				try {
+					connection.close();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}				
+			}
+		}
 	}
 
 
