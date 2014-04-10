@@ -10,6 +10,9 @@
 	</bean>
 	<bean id="userDao" class="net.daum.UserDao">
 		<!-- <constructor-arg ref="connectionMkaer" /> -->
+		<property name="jdbcContext" ref="jdbcContext"></property>
+	</bean>
+	<bean id="jdbcContext" class="net.daum.JdbcContext">
 		<property name="dataSource" ref="dataSource"></property>
 	</bean>
 </beans>
