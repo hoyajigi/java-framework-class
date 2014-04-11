@@ -1,11 +1,8 @@
 package net.daum;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -16,6 +13,7 @@ public class UserDao {
 	public User get(final String id) throws ClassNotFoundException, SQLException {
 		final String query = "select * from userinfo where id = ?";
 		final String[] params = new String[] {id};
+
 		User queryForObject=null;
 		try {
 			queryForObject=getJdbcTemplate().queryForObject(query, params, new RowMapper<User>() {
@@ -28,23 +26,20 @@ public class UserDao {
 					return user;
 				}
 			});
-		} catch (EmptyResultDataAccessException e) {
-		}
+		} catch (EmptyResultDataAccessException e) {}
 		return queryForObject;
 	}
-
-
 
 	public void add(final User user) throws SQLException, ClassNotFoundException {
 		String query = "insert into userinfo(id,name,password) values(?,?,?)";
 		String[] params = new String[] {user.getId(),user.getName(),user.getPassword()};
-		getJdbcTemplate().update(query, params);
+		getJdbcTemplate().update(query, (Object[])params);
 	}
 
 	public void delete(final String id) throws SQLException {
 		String query = "delete from userinfo where id = ?";
 		String[] params = new String[] {id};
-		getJdbcTemplate().update(query, params);
+		getJdbcTemplate().update(query, (Object[])params);
 	}
 
 	public JdbcTemplate getJdbcTemplate() {

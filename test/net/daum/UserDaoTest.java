@@ -1,10 +1,12 @@
 package net.daum;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.sql.SQLException;
 import java.util.Random;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
@@ -12,11 +14,11 @@ import org.springframework.context.support.GenericXmlApplicationContext;
 
 public class UserDaoTest {
 	private UserDao userDao;
-
+	private ApplicationContext context;
+	
 	@Before
 	public void setup() {
-//		userDao = new DaoFactory().getUserDao();
-		ApplicationContext context = new GenericXmlApplicationContext("daoFactory.xml");
+		context = new GenericXmlApplicationContext("daoFactory.xml");
 		userDao=context.getBean("userDao",UserDao.class);
 	}
 	@Test
@@ -51,6 +53,10 @@ public class UserDaoTest {
 		userDao.add(user);	
 		userDao.delete(id);
 		assertNull(userDao.get(id));
+	}
+	@After
+	public void wrapup() {
+		context=null;
 	}
 }
 /*
